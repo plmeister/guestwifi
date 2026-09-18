@@ -51,6 +51,14 @@ config guestwifi 'main'
 	option words    ''            # optional custom word list (multiline)
 ```
 
+Regeneration runs on boot, on the nightly cron, and when LuCI saves.
+There is no automatic trigger on a bare `uci commit` (stock OpenWrt has no
+config-change hook for services), so after editing via CLI run:
+
+```sh
+uci commit guestwifi && service guestwifi restart
+```
+
 ## Build
 
 Build with the official OpenWrt SDK container — no local SDK required:
