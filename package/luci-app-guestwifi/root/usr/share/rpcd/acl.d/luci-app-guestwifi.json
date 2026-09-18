@@ -1,0 +1,15 @@
+{
+  "luci-app-guestwifi": {
+    "description": "Grant access to Guest Wi-Fi configuration",
+    "read": {
+      "uci": [
+        "guestwifi"
+      ]
+    },
+    "write": {
+      "uci": [
+        "guestwifi"
+      ]
+    }
+  }
+}

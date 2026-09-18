@@ -1,0 +1,62 @@
+name: build-apk-repo
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build packages in SDK container
+        run: |
+          mkdir -p .dkr-out/bin .dkr-out/dl
+          docker run --rm \
+            -v "$PWD/.dkr-out/bin:/builder/bin" \
+            -v "$PWD/.dkr-out/dl:/builder/dl" \
+            -v "$PWD/package:/pkg:ro" \
+            openwrt/sdk:ath79-generic-v25.12.5 \
+            sh -c 'cd /builder &&
+              ./scripts/feeds update -a &&
+              ln -sfn /pkg/guestwifi package/guestwifi &&
+              ln -sfn /pkg/luci-app-guestwifi package/luci-app-guestwifi &&
+              make defconfig &&
+              make package/guestwifi/compile package/luci-app-guestwifi/compile -j$(nproc) &&
+              openssl genrsa -out private-key.pem 2048 &&
+              make package/index'
+
+      - name: Show artifacts
+        run: ls -la .dkr-out/bin/packages/mips_24kc/base
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: apks
+          path: .dkr-out/bin/packages/mips_24kc/base/*
+          if-no-files-found: error
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .dkr-out/bin/packages/mips_24kc/base
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

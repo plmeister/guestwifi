@@ -1,0 +1,8 @@
+config guestwifi 'main'
+	option enabled '1'
+	option ssid 'Guest'
+	option secret ''
+	# optional: wifi-iface section name to apply the key to; empty = match by SSID
+	option interface ''
+	# optional: 256 unique lowercase words (3-12 chars), one per line
+	option words ''
