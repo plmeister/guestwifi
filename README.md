@@ -91,7 +91,7 @@ publishes them to GitHub Pages as an apk repository (see
 Point apk at the published Pages repository:
 
 ```sh
-echo "https://plmeister.github.io/guestwifi" \
+echo "https://plmeister.github.io/guestwifi/packages.adb" \
   > /etc/apk/repositories.d/guestwifi.list
 apk update
 apk add --allow-untrusted guestwifi luci-app-guestwifi
@@ -100,9 +100,11 @@ uci commit guestwifi
 /etc/init.d/guestwifi start
 ```
 
-The `--allow-untrusted` flag is required because the Pages repository is not
-signed. For signed installs, re-sign `index.json`/`packages.adb` with your own
-key and copy the `.pub` into `/etc/apk/keys/`.
+The `--allow-untrusted` flag is required because the Pages repository is
+re-signed with an ephemeral key on every CI build. `apk update` will report the
+repository as `unavailable` due to the untrusted signature; installs still work.
+For signed installs, re-sign `index.json`/`packages.adb` with your own key and
+copy the `.pub` into `/etc/apk/keys/`.
 
 ## License
 
