@@ -25,7 +25,7 @@ jobs:
       - name: Build packages in SDK container
         run: |
           mkdir -p .dkr-out/bin .dkr-out/dl
-          docker run --rm \
+          docker run --rm --user 0 \
             -v "$PWD/.dkr-out/bin:/builder/bin" \
             -v "$PWD/.dkr-out/dl:/builder/dl" \
             -v "$PWD/package:/pkg:ro" \

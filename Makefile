@@ -7,7 +7,7 @@ OUT         = .dkr-out/bin/packages/mips_24kc/base
 # Build both packages in the official OpenWrt SDK container.
 build:
 	mkdir -p .dkr-out/bin .dkr-out/dl
-	docker run --rm \
+	docker run --rm --user 0 \
 	  -v $(CURDIR)/.dkr-out/bin:/builder/bin \
 	  -v $(CURDIR)/.dkr-out/dl:/builder/dl \
 	  -v $(CURDIR)/package:/pkg:ro \
@@ -23,7 +23,7 @@ build:
 # Regenerate the apk index for the built packages (after a manual build).
 # The index is signed with an ephemeral key; use --allow-untrusted to install.
 index:
-	docker run --rm \
+	docker run --rm --user 0 \
 	  -v $(CURDIR)/.dkr-out/bin:/builder/bin \
 	  -v $(CURDIR)/.dkr-out/dl:/builder/dl \
 	  -v $(CURDIR)/package:/pkg:ro \
