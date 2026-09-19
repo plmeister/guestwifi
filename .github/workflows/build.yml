@@ -35,9 +35,9 @@ jobs:
               ln -sfn /pkg/guestwifi package/guestwifi &&
               ln -sfn /pkg/luci-app-guestwifi package/luci-app-guestwifi &&
               make defconfig &&
-              make package/guestwifi/compile package/luci-app-guestwifi/compile -j$(nproc) &&
+              make package/guestwifi/compile package/luci-app-guestwifi/compile V=s -j$(nproc) &&
               openssl genrsa -out private-key.pem 2048 &&
-              make package/index'
+              make package/index V=s'
 
       - name: Show artifacts
         run: ls -la .dkr-out/bin/packages/mips_24kc/base
