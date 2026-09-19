@@ -91,7 +91,7 @@ publishes them to GitHub Pages as an apk repository (see
 Point apk at the published Pages repository:
 
 ```sh
-echo "https://plmeister.github.io/guestwifi/mips_24kc/base" \
+echo "https://plmeister.github.io/guestwifi" \
   > /etc/apk/repositories.d/guestwifi.list
 apk update
 apk add --allow-untrusted guestwifi luci-app-guestwifi
